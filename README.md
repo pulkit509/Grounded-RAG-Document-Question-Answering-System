@@ -4,13 +4,13 @@ Upload text PDFs or TXT documents, search them using a Python TF-IDF vector inde
 
 ## Run
 
-Requires Python 3.10+ and an OpenAI API key for generation. Retrieval and evaluation work without an API key. No C++ compiler or local model download is required.
+Requires Python 3.10+. For local generation, install Ollama and run `ollama pull gemma3:1b`; Ollama must remain running. Alternatively, set `OPENAI_API_KEY` for OpenAI generation. Retrieval and evaluation work without either provider. No C++ compiler is required.
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-export OPENAI_API_KEY=your_key  # Windows PowerShell: $env:OPENAI_API_KEY="your_key"
+ollama pull gemma3:1b  # optional local generation; install Ollama first
 uvicorn src.api:app --reload
 ```
 
@@ -18,7 +18,7 @@ In a second terminal: `streamlit run app.py`. API docs: http://localhost:8000/do
 
 ## Architecture
 
-PDF/TXT → page extraction → overlapping word chunks → Python TF-IDF vectors → exact cosine search → top-k context → LLM answer with numbered citations. The response includes the actual passages to inspect. Uploaded files are identified by filename; uploading the same name replaces its indexed content. Scanned PDFs require OCR before upload.
+PDF/TXT → page extraction → overlapping word chunks → Python TF-IDF vectors → exact cosine search → top-k context → local Ollama or OpenAI answer with numbered citations. The response includes the actual passages to inspect. Uploaded files are identified by filename; uploading the same name replaces its indexed content. Scanned PDFs require OCR before upload.
 
 ## API
 
