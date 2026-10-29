@@ -1,10 +1,10 @@
 # Grounded RAG: cited document Q&A
 
-Upload text PDFs or TXT documents, search them using local sentence embeddings and an HNSW vector index, and generate grounded answers with an LLM. Each answer includes numbered references to retrieved passages; the UI shows document names, page numbers, text and similarity. SQLite persists chunks; the HNSW index is reconstructed from SQLite at startup and after replacing a file.
+Upload text PDFs or TXT documents, search them using a Python TF-IDF vector index, and generate grounded answers with an LLM. Each answer includes numbered references to retrieved passages; the UI shows document names, page numbers, text and similarity. SQLite persists chunks; the HNSW index is reconstructed from SQLite at startup and after replacing a file.
 
 ## Run
 
-Requires Python 3.10+ and an OpenAI API key for generation. Retrieval and evaluation work without an API key. The embedding model downloads on first run.
+Requires Python 3.10+ and an OpenAI API key for generation. Retrieval and evaluation work without an API key. No C++ compiler or local model download is required.
 
 ```bash
 python -m venv .venv
@@ -18,7 +18,7 @@ In a second terminal: `streamlit run app.py`. API docs: http://localhost:8000/do
 
 ## Architecture
 
-PDF/TXT → page extraction → overlapping word chunks → MiniLM embeddings → HNSW cosine search → top-k context → LLM answer with numbered citations. The response includes the actual passages to inspect. Uploaded files are identified by filename; uploading the same name replaces its indexed content. Scanned PDFs require OCR before upload.
+PDF/TXT → page extraction → overlapping word chunks → Python TF-IDF vectors → exact cosine search → top-k context → LLM answer with numbered citations. The response includes the actual passages to inspect. Uploaded files are identified by filename; uploading the same name replaces its indexed content. Scanned PDFs require OCR before upload.
 
 ## API
 
@@ -37,4 +37,4 @@ LLM citations are requested by the prompt, but may be incorrect; inspect returne
 
 ## Suggested resume text (after running it)
 
-Built a document Q&A system using sentence embeddings, HNSW vector search, FastAPI, and an LLM; returned source passages with page references and implemented a labeled Recall@k evaluation script.
+Built a document Q&A system using Python TF-IDF vector search, FastAPI, and an LLM; returned source passages with page references and implemented a labeled Recall@k evaluation script.
